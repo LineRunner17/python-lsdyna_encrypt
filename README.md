@@ -78,7 +78,7 @@ This would allow the use of this then encrypted curve until May 1, 2024. Also th
 >>> python3 encrypt_lsdyna.py test.key
 ```
 
-* As script (See also [test_encrypt_lsdyna.py](test_encrypt_lsdyna.py) for this example.)
+* As script (See also [test_encrypt_lsdyna.py](examples/test_encrypt_lsdyna.py) for this example.)
 Please note that all arguments **must** be keyword arguments.
 ```python
 from encrypt_lsdyna import LS_Dyna_Encryptor
