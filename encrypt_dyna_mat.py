@@ -13,22 +13,13 @@ from typing import Union
 # TODO:
 # - 
 # ==============================================================================
-
-import logging
-from cae_utilities.logger.stream_logger import sh_logger
-PRINT = logging.INFO + 5
-logging.addLevelName(PRINT, "PRINT")
-# sh_logger.setLevel(logging.DEBUG)
-
-
-# ==============================================================================
 __versioninfo__ = (1, 0, 0)
 __version__ = '.'.join(map(str, __versioninfo__))
 __author__ = "Julian Junglas"
 __authormail__ = ""
 __date__ = "01.05.2023"
 __license__ = "GPL-3.0 license"
-
+#
 # ==============================================================================
 class CliColors:
     # reset to default background, default font
@@ -98,6 +89,98 @@ class CliColors:
     PR_CRITICAL = bg_lightred
 
 # =================================================================================================
+# logging module
+import logging
+# =================================================================================================
+# CREDITS TO: Mad Physicist
+# https://stackoverflow.com/questions/2183233/how-to-add-a-custom-loglevel-to-pythons-logging-facility
+def addLoggingLevel(levelName, levelNum, methodName=None):
+    """
+    Comprehensively adds a new logging level to the `logging` module and the
+    currently configured logging class.
+
+    `levelName` becomes an attribute of the `logging` module with the value
+    `levelNum`. `methodName` becomes a convenience method for both `logging`
+    itself and the class returned by `logging.getLoggerClass()` (usually just
+    `logging.Logger`). If `methodName` is not specified, `levelName.lower()` is
+    used.
+
+    To avoid accidental clobberings of existing attributes, this method will
+    raise an `AttributeError` if the level name is already an attribute of the
+    `logging` module or if the method name is already present 
+
+    Example
+    -------
+    >>> addLoggingLevel('TRACE', logging.DEBUG - 5)
+    >>> logging.getLogger(__name__).setLevel("TRACE")
+    >>> logging.getLogger(__name__).trace('that worked')
+    >>> logging.trace('so did this')
+    >>> logging.TRACE
+    5
+
+    """
+    if not methodName:
+        methodName = levelName.lower()
+
+    if hasattr(logging, levelName):
+       raise AttributeError('{} already defined in logging module'.format(levelName))
+    if hasattr(logging, methodName):
+       raise AttributeError('{} already defined in logging module'.format(methodName))
+    if hasattr(logging.getLoggerClass(), methodName):
+       raise AttributeError('{} already defined in logger class'.format(methodName))
+
+    # This method was inspired by the answers to Stack Overflow post
+    # http://stackoverflow.com/q/2183233/2988730, especially
+    # http://stackoverflow.com/a/13638084/2988730
+    def logForLevel(self, message, *args, **kwargs):
+        if self.isEnabledFor(levelNum):
+            self._log(levelNum, message, args, **kwargs)
+    def logToRoot(message, *args, **kwargs):
+        logging.log(levelNum, message, *args, **kwargs)
+
+    logging.addLevelName(levelNum, levelName)
+    setattr(logging, levelName, levelNum)
+    setattr(logging.getLoggerClass(), methodName, logForLevel)
+    setattr(logging, methodName, logToRoot)
+
+addLoggingLevel('PRINT', logging.INFO + 5)
+addLoggingLevel('LIGHT_WARNING', logging.WARNING - 1)
+
+# -------------------------------------------------------------------------------------------------
+# stream handler for logging
+# -------------------------------------------------------------------------------------------------
+class CustomSHFormatter(logging.Formatter):
+	#format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
+	format = '%(message)s'
+
+	FORMATS = {
+		logging.DEBUG: "%(funcName)25s: " + CliColors.fg_blue + format + CliColors.reset_all,
+		logging.INFO: CliColors.PR_INFO + format + CliColors.reset_all,
+		logging.PRINT: CliColors.reset_all + format + CliColors.reset_all,
+		logging.LIGHT_WARNING: CliColors.PR_WARNING + format + CliColors.reset_all,
+		logging.WARNING: CliColors.PR_WARNING + format + CliColors.reset_all,
+		logging.ERROR: CliColors.PR_ERROR + format + CliColors.reset_all,
+		logging.CRITICAL: CliColors.PR_CRITICAL + format + CliColors.reset_all
+	}
+
+	def format(self, record):
+		log_fmt = self.FORMATS.get(record.levelno)
+		formatter = logging.Formatter(log_fmt)
+		return formatter.format(record)
+
+# -------------------------------------------------------------------------------------------------
+stream_handler_level = logging.INFO
+sh_logger = logging.getLogger(__name__)
+sh_logger.setLevel(stream_handler_level)
+
+sh = logging.StreamHandler()
+sh.setFormatter(CustomSHFormatter())
+# sh.setLevel(stream_handler_level)
+sh_logger.addHandler(sh)
+PRINT = logging.INFO + 5
+logging.addLevelName(PRINT, "PRINT")
+
+# =================================================================================================
 # =================================================================================================
 # displays a progress bar in the console
 # =================================================================================================
@@ -114,7 +197,6 @@ def progress_bar(iteration, maximum):
     bar = '[' + CliColors.fg_green + '■' * num_bar_chars + CliColors.reset_all + ' ' * (progress_bar_length - num_bar_chars) + ' ]'
     print(f"Progress: {bar} {progress*100:.1f}%", end='\r')
     
-
 # =================================================================================================
 def timed(func):
     def wrapper(*args, **kwargs):
@@ -124,7 +206,6 @@ def timed(func):
         print(f"{func.__name__} took {end-start:.6f} seconds to execute. *args: {args[0]}")
         return result
     return wrapper
-
 
 # =================================================================================================
 def ask_overwrite(question):
@@ -240,7 +321,6 @@ OecvAhsMAAoJEHfQoCtgwENaVqQBAJpCFxs3P6wU+YE202jd4BzNXORIqJjYHbk+
         self.__set_ls_dyna_user_id(key_length)
         self.check_gpg_key()
 
-
     # ==============================================================================
     def __set_ls_dyna_user_id(self, key_length: int):
         # these user ids probably need to be updated at some point if LSTC/ANSYS changes them
@@ -251,7 +331,6 @@ OecvAhsMAAoJEHfQoCtgwENaVqQBAJpCFxs3P6wU+YE202jd4BzNXORIqJjYHbk+
         else:
             sh_logger.error("Encryption key length not available/not known. At the moment just 1024- and 2048-bit keys are supported by LS-Dyna. Exiting...")
             sys.exit()
-
 
     # ==============================================================================
     def check_inputfile(self):
@@ -276,6 +355,7 @@ OecvAhsMAAoJEHfQoCtgwENaVqQBAJpCFxs3P6wU+YE202jd4BzNXORIqJjYHbk+
             ask_overwrite(f"outfile: {self.outfile_fullpath.name} already exists.")
 
         self.outfile = self.outfile_fullpath.name
+
     # ==============================================================================
     def check_logfile(self) -> str:
         # check if logfile exists
@@ -366,7 +446,6 @@ Please check your keys in your gpg configuration ot add the LS-Dyna keys. For fu
 https://ftp.lstc.com/anonymous/outgoing/support/FAQ/Instructions_encryption
 """)
             sys.exit()	
-
 
     # ==============================================================================
     def encrypt_actual_data(self, enc_data):
