@@ -119,10 +119,11 @@ A simple way to check the encryption is to compare the unencrypted and the encry
 At the moment this script is not yet available at PyPi. The plan is to make it available there eventually. For now, just download the script from its Github repo.It will definitely be distributed as a PyPi package once the package grows and does not contain just one file.
 
 
-## Issues & Ideas
+## Issues, Ideas, Getting Help & Feedback
 
 Feel free to submit any issues or ideas for enhancement on the github page: https://github.com/LineRunner17/python-lsdyna_encrypt
-If you want to contact me directly: python.dyna@gmail.com
+If you want to contact me directly via: python.dyna@gmail.com or [LinkedIn](https://www.linkedin.com/in/julian-junglas)
+
 
 
 ## Roadmap
@@ -130,7 +131,10 @@ If you want to contact me directly: python.dyna@gmail.com
 I hope this is just the beginning of a Python package for LS-Dyna in particular and other CAE activities in general. I will try to expand the idea in the future.
 See [Roadmap](Roadmap.md)
 
+## 3rd Party Tools
+
+* GnuPG as gpg
 
 ## License
 
-This code is licensed under **GPL-3.0 license** which basically means you can do whatever you want with it. If you think there will be some issues with the licensing and your project, just reach out to me and I'm sure we will find a solution.
+This code is licensed as open source under **GPL-3.0 license** which basically means you can do whatever you want with it. If you think there will be some issues with the licensing and your project, just reach out to me and I'm sure we will find a solution.
