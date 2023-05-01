@@ -1,5 +1,7 @@
 # python-lsdyna_encrypt
+
 Python script to encrypt LS-Dyna input files
+
 
 ## Background
 
@@ -49,6 +51,7 @@ HVNtK7fWtImiQpJum2J+sY3KQolVvQ==
 
 But as already mentioned, this method does not allow you to specify an expiration date.
 
+
 ## THE *VENDOR Keyword
 
 The keyword **\*VENDOR** is intended only for an expiration date within an encryption. The usage is as follows:
@@ -68,11 +71,18 @@ $#                a1                  o1
 ```
 This would allow the use of this then encrypted curve until May 1, 2024. Also the error message until the next *Keyword is printed in the message file or d3hsp. Please note that the LS-Dyna uses the server date to check against the expiration date. I.e. if you have an encrypted file, you can still run simulations with this encrypted file if you manually reset the server date to a date before the expiration date.
 
+
 ## Requirements
+
+* Requires setup of gpg on the machine and importing the LS-Dyna Public keys
+  * These steps above are a one-time thing.
 * Python3.6 and above
 * Tested in various LINUX enviroments
 * Not in Windows, but should work
+
+
 ## Example Usage
+
 * On the CLI:
 ```
 >>> python3 encrypt_lsdyna.py test.key
@@ -96,21 +106,30 @@ lde.keywords_to_encrypt = ['*DEFINE_CURVE']
 lde.encrypt_file()
 ```
 
+
 ## Testing of Encrypted LS-Dyna input
 
 Since it is not possible to decrypt the encrypted key files without the private key, which only LS-Dyna has, the correct encryption can only be verified by an additional simulation run. Up to this point I never had any problems with the code, but please understand that I cannot take any responsibility or warranty.
 A simple way to check the encryption is to compare the unencrypted and the encrypted key file. The number of lines of the encrypted file should be greater than the number of lines of the unencrypted key file. The higher the encryption level (1024- or 2048-bit), the greater the difference. With the 1024-bit version, it turned out that the difference is not too big and the encryption really adds only a few lines.
 
+
 ---
+## Installation
+
+At the moment this script is not yet available at PyPi. The plan is to make it available there eventually. For now, just download the script from its Github repo.It will definitely be distributed as a PyPi package once the package grows and does not contain just one file.
+
 
 ## Issues & Ideas
 
 Feel free to submit any issues or ideas for enhancement on the github page: https://github.com/LineRunner17/python-lsdyna_encrypt
 If you want to contact me directly: python.dyna@gmail.com
 
-## Future Outlook
+
+## Roadmap
 
 I hope this is just the beginning of a Python package for LS-Dyna in particular and other CAE activities in general. I will try to expand the idea in the future.
+See [Roadmap](Roadmap.md)
+
 
 ## License
 
