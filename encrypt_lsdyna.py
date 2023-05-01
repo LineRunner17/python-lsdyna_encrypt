@@ -7,11 +7,13 @@ from datetime import (
     timedelta
 )
 import time
-from typing import Union
+from typing import Optional, Union
 
 # ==============================================================================
 # TODO:
-# - 
+# - check pitfalls for different keywords in combination with startswith
+# - add option to just encrypt keywords partially (not compatible with expiry date)
+# -
 # ==============================================================================
 __versioninfo__ = (1, 0, 0)
 __version__ = '.'.join(map(str, __versioninfo__))
@@ -223,7 +225,7 @@ def ask_overwrite(question):
 # ==============================================================================
 # classes
 # ==============================================================================
-class LS_Dyna_Mat_Encryptor:
+class LS_Dyna_Encryptor:
     LS_DYNA_PUBLIC_PGP_KEY_1028_BIT = """-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
@@ -290,7 +292,7 @@ OecvAhsMAAoJEHfQoCtgwENaVqQBAJpCFxs3P6wU+YE202jd4BzNXORIqJjYHbk+
 =xfll
 -----END PGP PUBLIC KEY BLOCK-----"""
 
-    def __init__(self, inputfile: str, outfile: str, expiry_date: Union[str, datetime.date], key_length: int = 1024):
+    def __init__(self, *, inputfile: str, outfile: Optional[str] = None, expiry_date: Union[str, datetime.date], key_length: int = 1024):
         self.inputfile: pathlib.Path = pathlib.Path(inputfile).resolve()
         self.outfile: pathlib.Path = None
         if outfile is not None:
@@ -608,6 +610,6 @@ if __name__ == '__main__':
     # start the argument parser, read the arguments from CLI and set the variables
     inputfile, outfile, expiry_date, key_length = start_args()
     print()
-    lsdyna_me = LS_Dyna_Mat_Encryptor(inputfile, outfile, expiry_date, key_length)
+    lsdyna_me = LS_Dyna_Encryptor(inputfile=inputfile, outfile=outfile, expiry_date=expiry_date, key_length=key_length)
     lsdyna_me.encrypt_file()
     print()
