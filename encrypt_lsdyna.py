@@ -1,13 +1,13 @@
 import sys
-import pathlib
 import os
+import time
+import pathlib
 import argparse
+from typing import Optional, Union
 from datetime import (
     datetime,
     timedelta
 )
-import time
-from typing import Optional, Union
 
 # ==============================================================================
 # TODO:
@@ -18,7 +18,7 @@ from typing import Optional, Union
 __versioninfo__ = (1, 0, 0)
 __version__ = '.'.join(map(str, __versioninfo__))
 __author__ = "Julian Junglas"
-__authormail__ = ""
+__authormail__ = "python.dyna@gmail.com"
 __date__ = "01.05.2023"
 __license__ = "GPL-3.0 license"
 #

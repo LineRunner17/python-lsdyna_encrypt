@@ -6,14 +6,14 @@ Python script to encrypt LS-Dyna input files
 This Python script is able to partially encrypt LS-Dyna input/key files based on the encryption algorithm provided by LSTC/ANSYS. 'gpg' is used for the encryption process.
 For more information on the general gpg encryption process, please refer to the GnuPG project at https://gnupg.org/. For more information on the encryption in the LS-Dyna enviroment please refer to these instructions. (https://ftp.lstc.com/anonymous/outgoing/support/FAQ/Instructions_encryption)
 
-Most often, encryption is used to encrypt material cards and the associated know-how. Since it is quite expensive to create material cards, a common way is to exchange material cards only in encrypted form. For the widely used **\*MAT_PIECEWISE_LINEAR_PLASTICITY_TITLE** or **\*MAT_024**, the know-how is based on the corresponding curves. Therefore this script encrypts only **\*DEFINE_CURVE<_TITLE>** and **\*DEFINE_TABLE<_TITLE>** by default.
+Most often, encryption is used to encrypt material cards and the associated know-how. Since it is quite expensive to create material cards, a common way is to exchange material cards only in encrypted form. For the widely used **\*MAT_PIECEWISE_LINEAR_PLASTICITY_TITLE** or **\*MAT_024**, the know-how is based on the corresponding curves. Therefore this script encrypts only **\*DEFINE_CURVE{_TITLE}** and **\*DEFINE_TABLE{_TITLE}** by default.
 
 According to Dynamore Germany, it is in principle also possible to partially encrypt the key files without completely encrypting the keywords. I was also able to test and confirm this myself. This will be added to this script in one of the next versions.
 
 It is also possible to include an expiry date in the encryption. The **\*VENDOR** keyword is used for this purpose. Unfortunately, it is not possible to encrypt a keyword only partially together with an expiry date. That is, if an expiry date is to be used, it is only possible to encrypt whole keywords.
 
 For example:
-For a **\*DEFINE_CURVE<_TITLE>** keyword, it would be sufficient to encode only the x-y data of the curve to protect the know-how. Then the following keyword:
+For a **\*DEFINE_CURVE{_TITLE}** keyword, it would be sufficient to encode only the x-y data of the curve to protect the know-how. Then the following keyword:
 ```
 *DEFINE_CURVE_TITLE
 $# title
@@ -69,16 +69,18 @@ $#                a1                  o1
 This would allow the use of this then encrypted curve until May 1, 2024. Also the error message until the next *Keyword is printed in the message file or d3hsp. Please note that the LS-Dyna uses the server date to check against the expiration date. I.e. if you have an encrypted file, you can still run simulations with this encrypted file if you manually reset the server date to a date before the expiration date.
 
 ## Requirements
-Python3.6 and above
+* Python3.6 and above
+* Tested in various LINUX enviroments
+* Not in Windows, but should work
 ## Example Usage
-On the CLI:
+* On the CLI:
 ```
 >>> python3 encrypt_lsdyna.py test.key
 ```
 
-As script (See also [test_encrypt_lsdyna.py](test_encrypt_lsdyna.py) for this example.)
+* As script (See also [test_encrypt_lsdyna.py](test_encrypt_lsdyna.py) for this example.)
 Please note that all arguments **must** be keyword arguments.
-```
+```python
 from encrypt_lsdyna import LS_Dyna_Encryptor
 
 lde = LS_Dyna_Encryptor(inputfile = 'test.key', expiry_date = '05/01/2024')
@@ -86,7 +88,7 @@ lde.encrypt_file()
 ```
 
 If you want to encrypt different keywords than the default ones, you can set them like this. The script will search if the keyword startswith the given *keyword_to_encrypt*. This can have some pitfalls and will need to be explored in more detail at a later date.
-```
+```python
 from encrypt_lsdyna import LS_Dyna_Encryptor
 
 lde = LS_Dyna_Encryptor(inputfile = 'test.key', expiry_date = '05/01/2024')
