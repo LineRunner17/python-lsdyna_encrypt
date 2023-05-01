@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
-Input file to encrypt: /home/julian/Downloads/cae-utilities/cae_utilities/dyna_tools/encrypt_dyna_mats/test.txt
+Input file to encrypt: /home/julian/Downloads/python-lsdyna_encrypt/test.txt
 by: 0x65AEC0AE
-on: 01. May 2023 14:27:15
-Expiry date: Never
+on: 01. May 2023 15:12:35
+Expiry date: 30. April 2026
 Encrypted keywords: *DEFINE_TABLE, *DEFINE_CURVE
