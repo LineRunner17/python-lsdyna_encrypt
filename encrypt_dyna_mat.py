@@ -27,6 +27,7 @@ __version__ = '.'.join(map(str, __versioninfo__))
 __author__ = "Julian Junglas"
 __authormail__ = ""
 __date__ = "01.05.2023"
+__license__ = "GPL-3.0 license"
 
 # ==============================================================================
 class CliColors:
