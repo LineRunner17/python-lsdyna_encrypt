@@ -593,8 +593,8 @@ def start_args():
     my_parser.version = __version__
     my_parser.add_argument('inputfile', type=str, help='specify the inputfiles to evaluate')
     my_parser.add_argument('-o', '--outfile', type=str, help='specify the name of the outputfile. Default = inputfile + .asc')
-    day_in_three_year = datetime.today() + timedelta(days=3*365) # 3 years
-    my_parser.add_argument('-ed', '--expiry_date', type=str, default=day_in_three_year, help='specify the date when the encrypted file should expire. Format must be mm/dd/yyyy')
+    # day_in_three_year = datetime.today() + timedelta(days=3*365) # 3 years
+    my_parser.add_argument('-ed', '--expiry_date', type=str, default='0', help='specify the date when the encrypted file should expire. Format must be mm/dd/yyyy')
     key_lengths = [1024, 2048]
     my_parser.add_argument('-kl', '--key_length', type=int, choices=key_lengths, default=key_lengths[0], help='specify the key-length to use')
     my_parser.add_argument('-ver', '--version', action='version')
