@@ -5,6 +5,7 @@ Python script to encrypt LS-Dyna input files
 ## Table of Content
 - [Introduction](#introduction)
   - [Background](#background)
+  - [Encryption in LS-Dyna](#encryption-in-ls-dyna)
   - [THE VENDOR Keyword](#the-vendor-keyword)
 - [Programming Background](#programming-background)
   - [Features](#features)
@@ -21,22 +22,21 @@ Python script to encrypt LS-Dyna input files
   - [FAQ](#faq)
 - [Contact](#contact)
 
-
-
 ## Introduction
-
 ### Background
-This Python script is able to partially encrypt LS-Dyna input/key files based on the encryption algorithm provided by LSTC/ANSYS. 'gpg' is used for the encryption process.
-For more information on the general gpg encryption process, please refer to the GnuPG project at https://gnupg.org/. For more information on the encryption in the LS-Dyna enviroment please refer to these instructions. (https://ftp.lstc.com/anonymous/outgoing/support/FAQ/Instructions_encryption)
-
-Most often, encryption is used to encrypt material cards and the associated know-how. Since it is quite expensive to create material cards, a common way is to exchange material cards only in encrypted form. For the widely used **\*MAT_PIECEWISE_LINEAR_PLASTICITY_TITLE** or **\*MAT_024**, the know-how is based on the corresponding curves. Therefore this script encrypts only **\*DEFINE_CURVE{_TITLE}** and **\*DEFINE_TABLE{_TITLE}** by default.
+In LS-Dyna Encryption is most often used to encrypt material cards and the associated know-how. Since it is quite expensive to create material cards, a common way is to exchange material cards only in encrypted form. For the widely used **\*MAT_PIECEWISE_LINEAR_PLASTICITY_TITLE** or **\*MAT_024**, the know-how is based on the corresponding curves. Therefore this script encrypts only **\*DEFINE_CURVE{_TITLE}** and **\*DEFINE_TABLE{_TITLE}** by default.
 
 According to Dynamore Germany, it is in principle also possible to partially encrypt the key files without completely encrypting the keywords. I was also able to test and confirm this myself. This will be added to this script in one of the next versions.
 
-It is also possible to include an expiry date in the encryption. The **\*VENDOR** keyword is used for this purpose. Unfortunately, it is not possible to encrypt a keyword only partially together with an expiry date. That is, if an expiry date is to be used, it is only possible to encrypt whole keywords.
+It is also possible to include an expiry date in the encryption. The [**\*VENDOR**](#the-vendor-keyword) keyword is used for this purpose. Unfortunately, it is not possible to encrypt a keyword only partially together with an expiry date. That is, if an expiry date is to be used, it is only possible to encrypt whole keywords.
+
+## Encryption in LS-Dyna
+This Python script is able to partially encrypt LS-Dyna input/key files based on the encryption algorithm provided by LSTC/ANSYS. 'gpg' is used for the encryption process.
+For more information on the general gpg encryption process, please refer to the GnuPG project at https://gnupg.org/. For more information on the encryption in the LS-Dyna enviroment please refer to these instructions. (https://ftp.lstc.com/anonymous/outgoing/support/FAQ/Instructions_encryption)
+
 
 For example:
-For a **\*DEFINE_CURVE{_TITLE}** keyword, it would be sufficient to encode only the x-y data of the curve to protect the know-how. Then the following keyword:
+For a **\*DEFINE_CURVE{_TITLE}** keyword, it would be sufficient to encrypt only the x-y data of the curve to protect the know-how. Then the following keyword:
 
 ```
 *DEFINE_CURVE_TITLE
@@ -52,10 +52,10 @@ $#                a1                  o1
 would look like this:
 
 ```
-\*DEFINE_CURVE_TITLE
-\$# title
+*DEFINE_CURVE_TITLE
+$# title
 Example Curve
-\$#    lcid      sidr       sfa       sfo      offa      offo    dattyp
+$#    lcid      sidr       sfa       sfo      offa      offo    dattyp
          1         0       1.0       1.0       0.0       0.0
 -----BEGIN PGP MESSAGE-----
 
@@ -98,7 +98,10 @@ This would allow the use of this then encrypted curve until May 1, 2024. Also th
 ## Programming Background
 
 ### Features
-To be filled...
+* Takes an inputfile and encrypts it.
+* Keywords to encrypt can be selected (Default: *DEFINE_CURVE, *DEFINE_TABLE)
+* Encryption key length 1024- and 2048-bit can be used (as provided by LS-Dyna)
+* Expiry date can be selected
 
 ### Requirements
 * Requires setup of gpg on the machine and importing the LS-Dyna Public keys
@@ -148,7 +151,7 @@ Please take this as preferred way. I will come back to it as soon as possible.
 If you feel the need and want to contact me directly via mail python.dyna@gmail.com or [LinkedIn](https://www.linkedin.com/in/julian-junglas)
 
 ### Roadmap
-I hope this is just the beginning of a Python package for LS-Dyna in particular and other CAE activities in general. I will try to expand the idea in the future.
+I hope this is just the beginning of a Python package for LS-Dyna in particular and other CAE activities in general. I will expand the idea in the future.
 See [Roadmap](roadmap.md)
 
 ### Credits to 3rd Party Tools

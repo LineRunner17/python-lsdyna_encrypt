@@ -24,6 +24,9 @@ __license__ = "GPL-3.0 license"
 #
 # ==============================================================================
 class CliColors:
+    """
+    This class defines the ANSI escape sequences for different colors and font
+    """
     # reset to default background, default font
     reset_all = "\033[0;39;49m"
     # set foreground color
@@ -152,23 +155,26 @@ addLoggingLevel('LIGHT_WARNING', logging.WARNING - 1)
 # stream handler for logging
 # -------------------------------------------------------------------------------------------------
 class CustomSHFormatter(logging.Formatter):
-	#format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
-	format = '%(message)s'
+    """
+    This class is used to format the output of the stream handler
+    """
+    #format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
+    format = '%(message)s'
 
-	FORMATS = {
-		logging.DEBUG: "%(funcName)25s: " + CliColors.fg_blue + format + CliColors.reset_all,
-		logging.INFO: CliColors.PR_INFO + format + CliColors.reset_all,
-		logging.PRINT: CliColors.reset_all + format + CliColors.reset_all,
-		logging.LIGHT_WARNING: CliColors.PR_WARNING + format + CliColors.reset_all,
-		logging.WARNING: CliColors.PR_WARNING + format + CliColors.reset_all,
-		logging.ERROR: CliColors.PR_ERROR + format + CliColors.reset_all,
-		logging.CRITICAL: CliColors.PR_CRITICAL + format + CliColors.reset_all
-	}
+    FORMATS = {
+        logging.DEBUG: "%(funcName)25s: " + CliColors.fg_blue + format + CliColors.reset_all,
+        logging.INFO: CliColors.PR_INFO + format + CliColors.reset_all,
+        logging.PRINT: CliColors.reset_all + format + CliColors.reset_all,
+        logging.LIGHT_WARNING: CliColors.PR_WARNING + format + CliColors.reset_all,
+        logging.WARNING: CliColors.PR_WARNING + format + CliColors.reset_all,
+        logging.ERROR: CliColors.PR_ERROR + format + CliColors.reset_all,
+        logging.CRITICAL: CliColors.PR_CRITICAL + format + CliColors.reset_all
+    }
 
-	def format(self, record):
-		log_fmt = self.FORMATS.get(record.levelno)
-		formatter = logging.Formatter(log_fmt)
-		return formatter.format(record)
+    def format(self, record):
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
 
 # -------------------------------------------------------------------------------------------------
 stream_handler_level = logging.INFO
@@ -201,6 +207,9 @@ def progress_bar(iteration, maximum):
     
 # =================================================================================================
 def timed(func):
+    """
+    decorator to measure the execution time of a function
+    """
     def wrapper(*args, **kwargs):
         start = time.perf_counter()
         result = func(*args, **kwargs)
@@ -211,6 +220,9 @@ def timed(func):
 
 # =================================================================================================
 def ask_overwrite(question):
+    """
+    Asks the user if he wants to overwrite a file. If the user answers with 'y', the function returns. If the user answers with 'n', the program is terminated.
+    """
     while True:
         sh_logger.critical(f"{question} Overwrite? (y/n)")
         overwrite = input().lower().strip()
@@ -226,6 +238,12 @@ def ask_overwrite(question):
 # classes
 # ==============================================================================
 class LS_Dyna_Encryptor:
+    """
+    This class is used to encrypt and decrypt files with LS-Dyna.
+
+    The encryption is done with the public key of LS-Dyna. The currently used public key is stored in the variable LS_DYNA_PUBLIC_PGP_KEY_1028_BIT.
+    """
+
     LS_DYNA_PUBLIC_PGP_KEY_1028_BIT = """-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
@@ -293,6 +311,14 @@ OecvAhsMAAoJEHfQoCtgwENaVqQBAJpCFxs3P6wU+YE202jd4BzNXORIqJjYHbk+
 -----END PGP PUBLIC KEY BLOCK-----"""
 
     def __init__(self, *, inputfile: str, outfile: Optional[str] = None, expiry_date: Union[str, datetime.date], key_length: int = 1024):
+        """
+        This class is used to encrypt the keywords in the input file and write the output to the output file.
+
+        :param inputfile: The input file to be encrypted.
+        :param outfile: The output file to write the encrypted keywords to.
+        :param expiry_date: The expiry date for the public key.
+        :param key_length: The length of the key to be generated.
+        """
         self.inputfile: pathlib.Path = pathlib.Path(inputfile).resolve()
         self.outfile: pathlib.Path = None
         if outfile is not None:
