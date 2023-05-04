@@ -167,7 +167,7 @@ To be filled...
 This code is licensed as open source under **GPL-3.0 license** which basically means you can do whatever you want with it. If you think there will be some issues with the licensing and your project, just reach out to me and I'm sure we will find a solution.
 
 ### Changelog
-See [RELEASE](RELEASE.md)
+See [RELEASE.md](RELEASE.md)
 
 ### FAQ
 To be filled, if some occur.
